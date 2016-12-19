@@ -1,6 +1,6 @@
 # Seaborn
 
-[![Build Status](https://travis-ci.org/malmaud/Seaborn.jl.svg?branch=master)](https://travis-ci.org/malmaud/Seaborn.jl)
+[![Build Status](https://travis-ci.org/JuliaPy/Seaborn.jl.svg?branch=master)](https://travis-ci.org/JuliaPy/Seaborn.jl)
 
 A Julia wrapper around the [Seaborn data visualization library](http://seaborn.pydata.org/index.html):
 
