@@ -1,3 +1,4 @@
+__precompile__(true)
 module Seaborn
 
 export
@@ -32,20 +33,26 @@ plotting_context,
 set_context,
 set_color_codes,
 reset_defaults,
-reset_orig
+reset_orig,
+load_dataset
 
 using Reexport
 using PyCall
 import Pandas
 @reexport using PyPlot
-@pyimport seaborn
+
+const seaborn = PyNULL()
+
+function __init__()
+    copy!(seaborn, pyimport_conda("seaborn", "seaborn"))
+end
 
 macro delegate(f_list...)
     blocks = Expr(:block)
     for f in f_list
         block = quote
             function $(esc(f))(args...; kwargs...)
-                seaborn.$f(args...; kwargs...)
+                seaborn[$(QuoteNode(f))](args...; kwargs...)
             end
         end
         push!(blocks.args, block)
@@ -53,7 +60,7 @@ macro delegate(f_list...)
     blocks
 end
 
-@delegate jointplot pairplot kdeplot lmplot regplot residplot interactplot coefplot factorplot boxplot violinplot stripplot swarmplot pointplot clustermap tsplot palplot FacetGrid PairGrid JointGrid axes_style set_style plotting_context set_context set_color_codes reset_defaults reset_orig set
+@delegate jointplot pairplot kdeplot lmplot regplot residplot interactplot coefplot boxplot violinplot stripplot swarmplot pointplot clustermap tsplot palplot FacetGrid PairGrid JointGrid axes_style set_style plotting_context set_context set_color_codes reset_defaults reset_orig set
 
 
 """
@@ -112,7 +119,7 @@ distributions and plot the estimated PDF over the data.
           distribution.
 """
 function distplot(args...; kwargs...)
-    seaborn.distplot(args...; kwargs...)
+    seaborn[:distplot](args...; kwargs...)
 end
 
 """
@@ -133,7 +140,7 @@ Plot datapoints in an array as sticks on an axis.
 * `ax` :  The `Axes` object with the plot on it.
 """
 function rugplot(args...; kwargs...)
-    seaborn.rugplot(args...; kwargs...)
+    seaborn[:rugplot](args...; kwargs...)
 end
 
 """
@@ -202,7 +209,7 @@ grouping variables to control the order of plot elements.
 * `factorplot` : Combine categorical plots and a class:`FacetGrid`.
 """
 function countplot(args...; kwargs...)
-    seaborn.countplot(args...; kwargs...)
+    seaborn[:countplot](args...; kwargs...)
 end
 
 """
@@ -306,7 +313,7 @@ grouping variables to control the order of plot elements.
 * `factorplot` : Combine categorical plots and a class:`FacetGrid`.
 """
 function barplot(args...; kwargs...)
-    seaborn.barplot(args...; kwargs...)
+    seaborn[:barplot](args...; kwargs...)
 end
 
 """
@@ -390,9 +397,121 @@ is False or a separate Axes is provided to ``cbar_ax``.
     Axes object with the heatmap.
 """
 function heatmap(args...; kwargs...)
-    seaborn.heatmap(args...; kwargs...)
+    seaborn[:heatmap](args...; kwargs...)
 end
 
+"""
+    factorplot(<keyword arguments>)
 
+Draw a categorical plot onto a FacetGrid.
+
+The default plot that is shown is a point plot, but other seaborn
+categorical plots can be chosen with the ``kind`` parameter, including
+box plots, violin plots, bar plots, or strip plots.
+
+It is important to choose how variables get mapped to the plot structure
+such that the most important comparisons are easiest to make. As a general
+rule, it is easier to compare positions that are closer together, so the
+``hue`` variable should be used for the most important comparisons. For
+secondary comparisons, try to share the quantitative axis (so, use ``col``
+for vertical plots and ``row`` for horizontal plots). Note that, although
+it is possible to make rather complex plots using this function, in many
+cases you may be better served by created several smaller and more focused
+plots than by trying to stuff many comparisons into one figure.
+
+After plotting, the :class:`FacetGrid` with the plot is returned and can
+be used directly to tweak supporting plot details or add other layers.
+
+Note that, unlike when using the underlying plotting functions directly,
+data must be passed in a long-form DataFrame with variables specified by
+passing strings to ``x``, ``y``, ``hue``, and other parameters.
+
+As in the case with the underlying plot functions, if variables have a
+``categorical`` data type, the correct orientation of the plot elements,
+the levels of the categorical variables, and their order will be inferred
+from the objects. Otherwise you may have to use the function parameters
+(``orient``, ``order``, ``hue_order``, etc.) to set up the plot correctly.
+
+# Parameters
+
+* `x`, `y`, hue : names of variables in ``data``.
+    Inputs for plotting long-form data. See examples for interpretation.
+* `data` : DataFrame.
+    Long-form (tidy) dataset for plotting. Each column should correspond
+    to a variable, and each row should correspond to an observation.
+* `row`, `col` : names of variables in ``data``, optional.
+    Categorical variables that will determine the faceting of the grid.
+* `col_wrap` : int, optional.
+    "Wrap" the column variable at this width, so that the column facets
+    span multiple rows. Incompatible with a ``row`` facet.
+* `estimator` : callable that maps vector -> scalar, optional.
+    Statistical function to estimate within each categorical bin.
+* `ci` : float or None, optional.
+    Size of confidence intervals to draw around estimated values. If
+    ``None``, no bootstrapping will be performed, and error bars will
+    not be drawn.
+* `n_boot` : int, optional.
+    Number of bootstrap iterations to use when computing confidence
+    intervals.
+* `units` : name of variable in ``data`` or vector data, optional.
+    Identifier of sampling units, which will be used to perform a
+    multilevel bootstrap and account for repeated measures design.
+* `order`, `hue_order` : lists of strings, optional.
+    Order to plot the categorical levels in, otherwise the levels are
+    inferred from the data objects.
+* `row_order`, `col_order` : lists of strings, optional.
+    Order to organize the rows and/or columns of the grid in, otherwise the
+    orders are inferred from the data objects.
+* `kind` : {``point``, ``bar``, ``count``, ``box``, ``violin``, ``strip``}.
+    The kind of plot to draw.
+* `size` : scalar, optional.
+    Height (in inches) of each facet. See also: ``aspect``.
+* `aspect` : scalar, optional.
+    Aspect ratio of each facet, so that ``aspect * size`` gives the width
+    of each facet in inches.
+* `orient` : "v" | "h", optional.
+    Orientation of the plot (vertical or horizontal). This is usually
+    inferred from the dtype of the input variables, but can be used to
+    specify when the "categorical" variable is a numeric or when plotting
+    wide-form data.
+* `color` : matplotlib color, optional.
+    Color for all of the elements, or seed for :func:`light_palette` when
+    using hue nesting.
+* `palette` : seaborn color palette or dict, optional.
+    Colors to use for the different levels of the ``hue`` variable. Should
+    be something that can be interpreted by :func:`color_palette`, or a
+    dictionary mapping hue levels to matplotlib colors.
+* `legend` : bool, optional.
+    If ``True`` and there is a ``hue`` variable, draw a legend on the plot.
+* `legend_out` : bool, optional.
+    If ``True``, the figure size will be extended, and the legend will be
+    drawn outside the plot on the center right.
+* `share{x,y}` : bool, optional.
+    If true, the facets will share y axes across columns and/or x axes
+    across rows.
+* `margin_titles` : bool, optional.
+    If ``True``, the titles for the row variable are drawn to the right of
+    the last column. This option is experimental and may not work in all
+    cases.
+* `facet_kws` : dict, optional.
+    Dictionary of other keyword arguments to pass to :class:`FacetGrid`.
+* `kwargs` : key, value pairings.
+    Other keyword arguments are passed through to the underlying plotting
+    function.
+
+# Returns
+
+`g` : `FacetGrid`.
+    Returns the `FacetGrid` object with the plot on it for further
+    tweaking.
+"""
+function factorplot(args...; kwargs...)
+    seaborn[:factorplot](args...; kwargs...)
+end
+
+function load_dataset(name)
+    o = seaborn[:load_dataset](name)
+    Pandas.DataFrame(o)
+end
 
 end # module
