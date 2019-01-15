@@ -1,6 +1,5 @@
 using Seaborn
-@static if VERSION < v"0.7.0-DEV.2005"
-    using Base.Test
-else
-    using Test
-end
+using Test
+
+# Let's just make sure this doesn't error
+rugplot([1,3,5])
