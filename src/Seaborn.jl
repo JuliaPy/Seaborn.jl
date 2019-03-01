@@ -52,7 +52,7 @@ macro delegate(f_list...)
     for f in f_list
         block = quote
             function $(esc(f))(args...; kwargs...)
-                seaborn[$(QuoteNode(f))](args...; kwargs...)
+                seaborn.$(QuoteNode(f))(args...; kwargs...)
             end
         end
         push!(blocks.args, block)
@@ -119,7 +119,7 @@ distributions and plot the estimated PDF over the data.
           distribution.
 """
 function distplot(args...; kwargs...)
-    seaborn[:distplot](args...; kwargs...)
+    seaborn.distplot(args...; kwargs...)
 end
 
 """
@@ -140,7 +140,7 @@ Plot datapoints in an array as sticks on an axis.
 * `ax` :  The `Axes` object with the plot on it.
 """
 function rugplot(args...; kwargs...)
-    seaborn[:rugplot](args...; kwargs...)
+    seaborn.rugplot(args...; kwargs...)
 end
 
 """
@@ -209,7 +209,7 @@ grouping variables to control the order of plot elements.
 * `factorplot` : Combine categorical plots and a class:`FacetGrid`.
 """
 function countplot(args...; kwargs...)
-    seaborn[:countplot](args...; kwargs...)
+    seaborn.countplot(args...; kwargs...)
 end
 
 """
@@ -313,7 +313,7 @@ grouping variables to control the order of plot elements.
 * `factorplot` : Combine categorical plots and a class:`FacetGrid`.
 """
 function barplot(args...; kwargs...)
-    seaborn[:barplot](args...; kwargs...)
+    seaborn.barplot(args...; kwargs...)
 end
 
 """
@@ -397,7 +397,7 @@ is False or a separate Axes is provided to ``cbar_ax``.
     Axes object with the heatmap.
 """
 function heatmap(args...; kwargs...)
-    seaborn[:heatmap](args...; kwargs...)
+    seaborn.heatmap(args...; kwargs...)
 end
 
 """
@@ -506,11 +506,11 @@ from the objects. Otherwise you may have to use the function parameters
     tweaking.
 """
 function factorplot(args...; kwargs...)
-    seaborn[:factorplot](args...; kwargs...)
+    seaborn.factorplot(args...; kwargs...)
 end
 
 function load_dataset(name)
-    o = seaborn[:load_dataset](name)
+    o = seaborn.load_dataset(name)
     Pandas.DataFrame(o)
 end
 
