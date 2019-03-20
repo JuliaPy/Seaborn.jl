@@ -52,7 +52,7 @@ macro delegate(f_list...)
     for f in f_list
         block = quote
             function $(esc(f))(args...; kwargs...)
-                seaborn.$(QuoteNode(f))(args...; kwargs...)
+                seaborn.$(f)(args...; kwargs...)
             end
         end
         push!(blocks.args, block)
