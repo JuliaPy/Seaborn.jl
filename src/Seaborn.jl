@@ -2,6 +2,9 @@ __precompile__(true)
 module Seaborn
 
 export
+lineplot,
+scatterplot,
+relplot,
 jointplot,
 pairplot,
 distplot,
@@ -60,7 +63,7 @@ macro delegate(f_list...)
     blocks
 end
 
-@delegate jointplot pairplot kdeplot lmplot regplot residplot interactplot coefplot boxplot violinplot stripplot swarmplot pointplot clustermap tsplot palplot FacetGrid PairGrid JointGrid axes_style set_style plotting_context set_context set_color_codes reset_defaults reset_orig set
+@delegate lineplot scatterplot relplot jointplot pairplot kdeplot lmplot regplot residplot interactplot coefplot boxplot violinplot stripplot swarmplot pointplot clustermap tsplot palplot FacetGrid PairGrid JointGrid axes_style set_style plotting_context set_context set_color_codes reset_defaults reset_orig set
 
 
 """
@@ -507,6 +510,220 @@ from the objects. Otherwise you may have to use the function parameters
 """
 function factorplot(args...; kwargs...)
     seaborn.factorplot(args...; kwargs...)
+end
+
+
+"""
+    lineplot (<keyword arguments>)
+    
+Draw a line plot with possibility of several semantic groupings.
+
+The relationship between `x` and `y` can be shown for different subsets of the data using the `hue`, `size`, and `style` parameters. These parameters control what visual semantics are used to identify the different subsets. It is possible to show up to three dimensions independently by using all three semantic types, but this style of plot can be hard to interpret and is often ineffective. Using redundant semantics (i.e. both `hue` and `style` for the same variable) can be helpful for making graphics more accessible.
+
+See the tutorial for more information.
+
+By default, the plot aggregates over multiple `y` values at each value of `x` and shows an estimate of the central tendency and a confidence interval for that estimate.
+
+# Parameters:	
+
+* `x`, `y` : names of variables in data or vector data, optional
+    Input data variables; must be numeric. Can pass data directly or reference columns in data.
+* `hue` : name of variables in data or vector data, optional
+    Grouping variable that will produce lines with different colors. Can be either categorical or numeric, although color mapping will behave differently in latter case.
+* `size` : name of variables in data or vector data, optional
+    Grouping variable that will produce lines with different widths. Can be either categorical or numeric, although size mapping will behave differently in latter case.
+* `style` : name of variables in data or vector data, optional
+    Grouping variable that will produce lines with different dashes and/or markers. Can have a numeric dtype but will always be treated as categorical.
+* `data` : DataFrame
+    Tidy (“long-form”) dataframe where each column is a variable and each row is an observation.
+* `palette` : palette name, list, or dict, optional
+    Colors to use for the different levels of the hue variable. Should be something that can be interpreted by color_palette(), or a dictionary mapping hue levels to matplotlib colors.
+* `hue_order` : list, optional
+    Specified order for the appearance of the hue variable levels, otherwise they are determined from the data. Not relevant when the hue variable is numeric.
+* `hue_norm` : tuple or Normalize object, optional
+    Normalization in data units for colormap applied to the hue variable when it is numeric. Not relevant if it is categorical.
+* `sizes` : list, dict, or tuple, optional
+    An object that determines how sizes are chosen when size is used. It can always be a list of size values or a dict mapping levels of the size variable to sizes. When size is numeric, it can also be a tuple specifying the minimum and maximum size to use such that other values are normalized within this range.
+* `size_order` : list, optional
+    Specified order for appearance of the size variable levels, otherwise they are determined from the data. Not relevant when the size variable is numeric.
+* `size_norm` : tuple or Normalize object, optional
+    Normalization in data units for scaling plot objects when the size variable is numeric.
+* `dashes` : boolean, list, or dictionary, optional
+    Object determining how to draw the lines for different levels of the style variable. Setting to True will use default dash codes, or you can pass a list of dash codes or a dictionary mapping levels of the style variable to dash codes. Setting to False will use solid lines for all subsets. Dashes are specified as in matplotlib: a tuple of (segment, gap) lengths, or an empty string to draw a solid line.
+* `markers` : boolean, list, or dictionary, optional
+    Object determining how to draw the markers for different levels of the style variable. Setting to True will use default markers, or you can pass a list of markers or a dictionary mapping levels of the style variable to markers. Setting to False will draw marker-less lines. Markers are specified as in matplotlib.
+* `style_order` : list, optional
+    Specified order for appearance of the style variable levels otherwise they are determined from the data. Not relevant when the style variable is numeric.
+* `units` : {long_form_var}
+    Grouping variable identifying sampling units. When used, a separate line will be drawn for each unit with appropriate semantics, but no legend entry will be added. Useful for showing distribution of experimental replicates when exact identities are not needed.
+* `estimator` : name of pandas method or callable or None, optional
+    Method for aggregating across multiple observations of the y variable at the same x level. If None, all observations will be drawn.
+* `ci` : int or “sd” or None, optional
+    Size of the confidence interval to draw when aggregating with an estimator. “sd” means to draw the standard deviation of the data. Setting to None will skip bootstrapping.
+* `n_boot` : int, optional
+    Number of bootstraps to use for computing the confidence interval.
+* `sort` : boolean, optional
+    If True, the data will be sorted by the x and y variables, otherwise lines will connect points in the order they appear in the dataset.
+* `err_style` : “band” or “bars”, optional
+    Whether to draw the confidence intervals with translucent error bands or discrete error bars.
+* `err_band` : dict of keyword arguments
+    Additional paramters to control the aesthetics of the error bars. The kwargs are passed either to ax.fill_between or ax.errorbar, depending on the err_style.
+* `legend` : “brief”, “full”, or False, optional
+    How to draw the legend. If “brief”, numeric hue and size variables will be represented with a sample of evenly spaced values. If “full”, every group will get an entry in the legend. If False, no legend data is added and no legend is drawn.
+* `ax` : matplotlib Axes, optional
+    Axes object to draw the plot onto, otherwise uses the current Axes.
+* `kwargs` : key, value mappings
+    Other keyword arguments are passed down to plt.plot at draw time.
+
+# Returns:	
+
+`ax` : matplotlib Axes
+    Returns the Axes object with the plot drawn onto it.
+"""
+function lineplot(args...; kwargs...)
+    seaborn.lineplot(args...; kwargs...)
+end
+
+
+"""
+    scatterplot(<keyword arguments>)
+
+Draw a scatter plot with possibility of several semantic groupings.
+
+The relationship between `x` and `y` can be shown for different subsets of the data using the `hue`, `size`, and `style` parameters. These parameters control what visual semantics are used to identify the different subsets. It is possible to show up to three dimensions independently by using all three semantic types, but this style of plot can be hard to interpret and is often ineffective. Using redundant semantics (i.e. both `hue` and `style` for the same variable) can be helpful for making graphics more accessible.
+
+See the tutorial for more information.
+
+# Parameters
+
+* `x`, `y` : names of variables in data or vector data, optional
+    Input data variables; must be numeric. Can pass data directly or reference columns in data.
+* `hue` : name of variables in data or vector data, optional
+    Grouping variable that will produce points with different colors. Can be either categorical or numeric, although color mapping will behave differently in latter case.
+* `size` : name of variables in data or vector data, optional
+    Grouping variable that will produce points with different sizes. Can be either categorical or numeric, although size mapping will behave differently in latter case.
+* `style` : name of variables in data or vector data, optional
+    Grouping variable that will produce points with different markers. Can have a numeric dtype but will always be treated as categorical.
+* `data` : DataFrame
+    Tidy (“long-form”) dataframe where each column is a variable and each row is an observation.
+* `palette` : palette name, list, or dict, optional
+    Colors to use for the different levels of the hue variable. Should be something that can be interpreted by color_palette(), or a dictionary mapping hue levels to matplotlib colors.
+* `hue_order` : list, optional
+    Specified order for the appearance of the hue variable levels, otherwise they are determined from the data. Not relevant when the hue variable is numeric.
+* `hue_norm` : tuple or Normalize object, optional
+    Normalization in data units for colormap applied to the hue variable when it is numeric. Not relevant if it is categorical.
+* `sizes` : list, dict, or tuple, optional
+    An object that determines how sizes are chosen when size is used. It can always be a list of size values or a dict mapping levels of the size variable to sizes. When size is numeric, it can also be a tuple specifying the minimum and maximum size to use such that other values are normalized within this range.
+* `size_order` : list, optional
+    Specified order for appearance of the size variable levels, otherwise they are determined from the data. Not relevant when the size variable is numeric.
+* `size_norm` : tuple or Normalize object, optional
+    Normalization in data units for scaling plot objects when the size variable is numeric.
+* `markers` : boolean, list, or dictionary, optional
+    Object determining how to draw the markers for different levels of the style variable. Setting to True will use default markers, or you can pass a list of markers or a dictionary mapping levels of the style variable to markers. Setting to False will draw marker-less lines. Markers are specified as in matplotlib.
+* `style_order` : list, optional
+    Specified order for appearance of the style variable levels otherwise they are determined from the data. Not relevant when the style variable is numeric.
+`{x,y}_bins` : lists or arrays or functions
+    Currently non-functional.
+* `units` : {long_form_var}
+    Grouping variable identifying sampling units. When used, a separate line will be drawn for each unit with appropriate semantics, but no legend entry will be added. Useful for showing distribution of experimental replicates when exact identities are not needed.
+    Currently non-functional.
+* `estimator` : name of pandas method or callable or None, optional
+    Method for aggregating across multiple observations of the y variable at the same x level. If None, all observations will be drawn. Currently non-functional.
+* `ci` : int or “sd” or None, optional
+    Size of the confidence interval to draw when aggregating with an estimator. “sd” means to draw the standard deviation of the data. Setting to None will skip bootstrapping. Currently non-functional.
+* `n_boot` : int, optional
+    Number of bootstraps to use for computing the confidence interval. Currently non-functional.
+* `alpha` : float
+    Proportional opacity of the points.
+* `{x,y}_jitter` : booleans or floats
+    Currently non-functional.
+* `legend` : “brief”, “full”, or False, optional
+    How to draw the legend. If “brief”, numeric hue and size variables will be represented with a sample of evenly spaced values. If “full”, every group will get an entry in the legend. If False, no legend data is added and no legend is drawn.
+* `ax` : matplotlib Axes, optional
+    Axes object to draw the plot onto, otherwise uses the current Axes.
+`kwargs` : key, value mappings
+    Other keyword arguments are passed down to plt.scatter at draw time.
+    
+# Returns:	
+
+* `ax` : matplotlib Axes
+    Returns the Axes object with the plot drawn onto it.
+"""
+function scatterplot(args...; kwargs...)
+    seaborn.scatterplot(args...; kwargs...)
+end
+
+"""
+    relplot(<keyword arguments>)
+    
+Figure-level interface for drawing relational plots onto a `FacetGrid`.
+
+This function provides access to several different axes-level functions that show the relationship between two variables with semantic mappings of subsets. The kind parameter selects the underlying axes-level function to use:
+
+    `scatterplot()` (with kind="scatter"; the default)
+    `lineplot()` (with kind="line")
+
+Extra keyword arguments are passed to the underlying function, so you should refer to the documentation for each to see kind-specific options.
+
+The relationship between `x` and `y` can be shown for different subsets of the data using the `hue`, `size`, and `style` parameters. These parameters control what visual semantics are used to identify the different subsets. It is possible to show up to three dimensions independently by using all three semantic types, but this style of plot can be hard to interpret and is often ineffective. Using redundant semantics (i.e. both `hue` and `style` for the same variable) can be helpful for making graphics more accessible.
+
+See the tutorial for more information.
+
+After plotting, the `FacetGrid` with the plot is returned and can be used directly to tweak supporting plot details or add other layers.
+
+Note that, unlike when using the underlying plotting functions directly, data must be passed in a long-form DataFrame with variables specified by passing strings to `x`, `y`, and other parameters.
+
+# Parameters
+
+* `x`, `y` : names of variables in data
+    Input data variables; must be numeric.
+* `hue` : name in data, optional
+    Grouping variable that will produce elements with different colors. Can be either categorical or numeric, although color mapping will behave differently in latter case.
+* `size` : name in data, optional
+    Grouping variable that will produce elements with different sizes. Can be either categorical or numeric, although size mapping will behave differently in latter case.
+* `style` : name in data, optional
+    Grouping variable that will produce elements with different styles. Can have a numeric dtype but will always be treated as categorical.
+* `data` : DataFrame
+    Tidy (“long-form”) dataframe where each column is a variable and each row is an observation.
+* `row`, `col` : names of variables in data, optional
+    Categorical variables that will determine the faceting of the grid.
+* `col_wrap` : int, optional
+    “Wrap” the column variable at this width, so that the column facets span multiple rows. Incompatible with a row facet.
+* `row_order`, `col_order` : lists of strings, optional
+    Order to organize the rows and/or columns of the grid in, otherwise the orders are inferred from the data objects.
+* `palette` : palette name, list, or dict, optional
+    Colors to use for the different levels of the hue variable. Should be something that can be interpreted by color_palette(), or a dictionary mapping hue levels to matplotlib colors.
+* `hue_order` : list, optional
+    Specified order for the appearance of the hue variable levels, otherwise they are determined from the data. Not relevant when the hue variable is numeric.
+* `hue_norm` : tuple or Normalize object, optional
+    Normalization in data units for colormap applied to the hue variable when it is numeric. Not relevant if it is categorical.
+* `sizes` : list, dict, or tuple, optional
+    An object that determines how sizes are chosen when size is used. It can always be a list of size values or a dict mapping levels of the size variable to sizes. When size is numeric, it can also be a tuple specifying the minimum and maximum size to use such that other values are normalized within this range.
+* `size_order` : list, optional
+    Specified order for appearance of the size variable levels, otherwise they are determined from the data. Not relevant when the size variable is numeric.
+* `size_norm` : tuple or Normalize object, optional
+    Normalization in data units for scaling plot objects when the size variable is numeric.
+* `legend` : “brief”, “full”, or False, optional
+    How to draw the legend. If “brief”, numeric hue and size variables will be represented with a sample of evenly spaced values. If “full”, every group will get an entry in the legend. If False, no legend data is added and no legend is drawn.
+* `kind` : string, optional
+    Kind of plot to draw, corresponding to a seaborn relational plot. Options are {scatter and line}.
+* `height` : scalar, optional
+    Height (in inches) of each facet. See also: aspect.
+* `aspect` : scalar, optional
+    Aspect ratio of each facet, so that aspect * height gives the width of each facet in inches.
+* `facet_kws` : dict, optional
+    Dictionary of other keyword arguments to pass to FacetGrid.
+* `kwargs` : key, value pairings
+    Other keyword arguments are passed through to the underlying plotting function.
+
+# Returns:	
+
+`g` : `FacetGrid`
+    Returns the FacetGrid object with the plot on it for further tweaking.
+"""
+
+function relplot(args...; kwargs...)
+    seaborn.relplot(args...; kwargs...)
 end
 
 function load_dataset(name)
