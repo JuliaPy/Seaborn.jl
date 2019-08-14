@@ -2,6 +2,7 @@ __precompile__(true)
 module Seaborn
 
 export
+despine,
 lineplot,
 scatterplot,
 relplot,
@@ -65,6 +66,27 @@ end
 
 @delegate jointplot pairplot kdeplot lmplot regplot residplot interactplot coefplot boxplot violinplot stripplot swarmplot pointplot clustermap tsplot palplot FacetGrid PairGrid JointGrid axes_style set_style plotting_context set_context set_color_codes reset_defaults reset_orig set
 
+"""
+        despine (<keyword arguments>)
+Remove the top and right spines from plot(s).
+# Parameters:
+* `fig`: matplotlib figure, optional
+        Figure to despine all axes of, default uses current figure
+* `ax`: matplotlib axes, optional
+        Specific axes object to despine
+* `top, right, left, bottom`: boolean, optional
+        if true, remove that spine
+* `offset`: int or dict, optional
+        Absolute distance, in points, spines should be moved away from the axes         (negative values move spines inward). A single value applies to all  
+        spines; a dict can be used to set offset values per side.
+* `trim`: bool, optional
+# Returns:
+        None
+"""
+
+function despine(args...; kwargs...)
+        seaborn.despine(args...; kwargs...)
+end
 
 """
     distplot(a; <keyword arguments>)
