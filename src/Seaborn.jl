@@ -17,6 +17,8 @@ residplot,
 interactplot,
 coefplot,
 factorplot,
+catplot,
+boxenplot,
 boxplot,
 violinplot,
 stripplot,
@@ -64,7 +66,7 @@ macro delegate(f_list...)
     blocks
 end
 
-@delegate jointplot pairplot kdeplot lmplot regplot residplot interactplot coefplot boxplot violinplot stripplot swarmplot pointplot clustermap tsplot palplot FacetGrid PairGrid JointGrid axes_style set_style plotting_context set_context set_color_codes reset_defaults reset_orig set
+@delegate jointplot pairplot kdeplot lmplot regplot residplot interactplot coefplot catplot boxenplot boxplot violinplot stripplot swarmplot pointplot clustermap tsplot palplot FacetGrid PairGrid JointGrid axes_style set_style plotting_context set_context set_color_codes reset_defaults reset_orig set
 
 """
         despine (<keyword arguments>)
