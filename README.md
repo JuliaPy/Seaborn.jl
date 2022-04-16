@@ -4,7 +4,6 @@
 
 A Julia wrapper around the [Seaborn data visualization library](http://seaborn.pydata.org/index.html):
 
-
 > Seaborn is a Python visualization library based on matplotlib. It provides a high-level interface for drawing attractive statistical graphics.
 
 > For a brief introduction to the ideas behind the package, you can read the [introductory notes](http://seaborn.pydata.org/introduction.html#introduction). More practical information is on the [installation page](http://seaborn.pydata.org/installing.html). You may also want to browse the [example gallery](http://seaborn.pydata.org/examples/index.html) to get a sense for what you can do with seaborn and then check out the [tutorial](http://seaborn.pydata.org/tutorial.html) and [API reference](http://seaborn.pydata.org/api.html) to find out how.
