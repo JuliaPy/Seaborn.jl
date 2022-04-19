@@ -1,7 +1,7 @@
 name = "Seaborn"
 uuid = "d2ef9438-c967-53ab-8060-373fdd9e13eb"
 authors = ["Jonathan Malmaud <malmaud@gmail.com>", "Mark Baum <markmbaum@protonmail.com>"]
-version = "1.1.0"
+version = "1.1.1"
 
 [deps]
 Pandas = "eadc2687-ae89-51f9-a5d9-86b5a6373a9c"
