@@ -11,8 +11,6 @@ function __init__()
     copy!(seaborn, pyimport_conda("seaborn", "seaborn"))
 end
 
-println("TESTING!!! REMOVE ME")
-
 #lazy docstring retrieval copied directly from:
 #https://github.com/JuliaPy/PyPlot.jl/blob/67305af500a1fef26b9d127e099d110a102900f5/src/PyPlot.jl#L33
 struct LazyHelp
@@ -31,7 +29,7 @@ function show(io::IO, ::MIME"text/plain", h::LazyHelp)
     if hasproperty(o, "__doc__")
         print(io, convert(AbstractString, o."__doc__"))
     else
-        print(io, "no Python docstring found for ", h.k)
+        print(io, "no Python docstring found for ", h.keys)
     end
 end
 Base.show(io::IO, h::LazyHelp) = show(io, "text/plain", h)
@@ -111,7 +109,7 @@ for func ∈ (
     @eval begin
         export $func
         @doc LazyHelp(seaborn, $s) function $func(args...; kwargs...)
-            seaborn.$func(args...; kwargs...)
+            seaborn.$s(args...; kwargs...)
         end
     end
 end
@@ -119,7 +117,7 @@ end
 #return a Pandas.DataFrame instead of PyCall.PyObject
 export load_dataset
 @doc LazyHelp(seaborn, "load_dataset") function load_dataset(args...; kwargs...)
-    seaborn.load_dataset(args...; kwargs...) |> Pandas.DataFrame
+    seaborn."load_dataset"(args...; kwargs...) |> Pandas.DataFrame
 end
 
 end # module
